@@ -1,48 +1,186 @@
+  Here's a new `index.html` file for your site, including:
+
+- SEO meta tags (title, description, keywords).
+- A centered headline, but placed lower on the page with space for ads at the very top.
+- Clean, responsive design.
+- All text and input elements as shown in your screenshot.
+- Easily modifiable sections for future ads (marked in HTML comments).
+
+```html name=index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>What Day Was It?</title>
+  <title>What Day Was It? | Days of the Week Calculator</title>
+  <meta name="description" content="Enter a date to find out which day of the week it was. Free online weekday calculator.">
+  <meta name="keywords" content="day of the week, date calculator, weekday, online tool, which day, calendar">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Optional: Social meta tags for better sharing -->
+  <meta property="og:title" content="What Day Was It?">
+  <meta property="og:description" content="Find out which day of the week any date was. Free online date-to-weekday calculator.">
+  <meta property="og:type" content="website">
   <style>
     body {
+      margin: 0;
+      padding: 0;
+      background: #efefef;
       font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 60px;
-      background-color: #f4f4f4;
+      min-height: 100vh;
     }
+
+    /* Top ad/banner space */
+    .ad-space {
+      width: 100%;
+      height: 80px;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* Add border or background if you want to visualize the space */
+      /* border-bottom: 1px solid #ccc; */
+    }
+
+    /* Main content */
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: calc(100vh - 80px);
+    }
+
+    .main-box {
+      margin-top: 90px; /* Push headline below ad space */
+      background: #fff;
+      padding: 40px 30px 30px 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+
     h1 {
+      font-size: 2.5em;
+      font-weight: 700;
+      margin-bottom: 10px;
       color: #333;
     }
-    input, button {
-      padding: 10px;
-      font-size: 16px;
-      margin: 10px;
+
+    p {
+      font-size: 1.2em;
+      color: #555;
+      margin-bottom: 30px;
     }
-    #result {
-      margin-top: 20px;
-      font-size: 20px;
-      color: #444;
+
+    .input-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    input[type="date"] {
+      padding: 9px 12px;
+      font-size: 1.1em;
+      border: 1px solid #bbb;
+      border-radius: 5px;
+      outline: none;
+      background: #f7f7f7;
+      width: 160px;
+    }
+
+    button {
+      padding: 9px 22px;
+      font-size: 1.1em;
+      background: #4b90e2;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #3466b6;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-size: 1.15em;
+      color: #222;
+      min-height: 1.5em;
+      font-weight: 600;
+    }
+
+    @media (max-width: 500px) {
+      .main-box {
+        padding: 20px 7px 20px 7px;
+      }
+      h1 { font-size: 1.5em; }
+      .container { min-height: calc(100vh - 60px); }
+      .ad-space { height: 60px; }
     }
   </style>
 </head>
 <body>
-  <h1>What Day Was It?</h1>
-  <p>Enter a date to find out which day of the week it was.</p>
-  <input type="date" id="dateInput">
-  <button onclick="findDay()">Check</button>
-  <div id="result"></div>
+  <!-- Top ad/banner section (leave empty or insert code for ads) -->
+  <div class="ad-space">
+    <!-- Place your ad code or banner here -->
+    <!-- Example: <img src="your-ad.jpg" alt="Ad" /> -->
+  </div>
+
+  <div class="container">
+    <div class="main-box">
+      <h1>What Day Was It?</h1>
+      <p>Enter a date to find out which day of the week it was.</p>
+      <form id="dateForm" autocomplete="off">
+        <div class="input-row">
+          <input type="date" id="dateInput" required>
+          <button type="submit">Check</button>
+        </div>
+      </form>
+      <div class="result" id="result"></div>
+    </div>
+  </div>
 
   <script>
-    function findDay() {
-      const input = document.getElementById("dateInput").value;
-      if (!input) return;
+    const form = document.getElementById('dateForm');
+    const input = document.getElementById('dateInput');
+    const result = document.getElementById('result');
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-      const date = new Date(input);
-      const dayName = days[date.getDay()];
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const value = input.value;
+      if (!value) {
+        result.textContent = "Please select a date.";
+        return;
+      }
+      const d = new Date(value);
+      if (isNaN(d.getTime())) {
+        result.textContent = "Invalid date.";
+        return;
+      }
+      result.textContent = "That day was: " + days[d.getUTCDay()];
+    });
 
-      document.getElementById("result").innerText = `The date ${input} was a ${dayName}.`;
-    }
+    // Optionally: show result instantly when date changes
+    input.addEventListener('change', function() {
+      if (input.value) {
+        const d = new Date(input.value);
+        if (!isNaN(d.getTime())) {
+          result.textContent = "That day was: " + days[d.getUTCDay()];
+        } else {
+          result.textContent = "Invalid date.";
+        }
+      } else {
+        result.textContent = "";
+      }
+    });
   </script>
 </body>
 </html>
+```
+
+ 
