@@ -1,6 +1,4 @@
-Absolutely! Here’s a sample README in English for your project:
 
-````markdown name=README.md
 # Days of the Week
 
 This website shows which day of the week any given date falls on.
